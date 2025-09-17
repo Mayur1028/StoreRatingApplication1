@@ -71,13 +71,12 @@ In phpMyAdmin → Select the reviewapp database → Click “Import” tab → C
 ## 4. Configure Environment Variables If Needed:
 
 ```bash
-Create a .env file in the backend folder:
 PORT=5000
 DB_HOST=localhost
 DB_USER=your_mysql_username
 DB_PASSWORD=your_mysql_password
 DB_NAME=reviewapp
-JWT_SECRET=your_jwt_secret
+JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
 ```
 
 ## 5. Run the App:
