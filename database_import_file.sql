@@ -1,12 +1,4 @@
--- Store Rating Database Complete Setup
--- Save this file as: store_rating_db.sql
--- Import this file directly into phpMyAdmin
-
--- Create database (you may need to create this manually in phpMyAdmin first)
--- CREATE DATABASE IF NOT EXISTS store_rating_db;
--- USE store_rating_db;
-
--- Drop existing tables if they exist (for clean import)
+-- Drop existing tables if they exist
 DROP TABLE IF EXISTS ratings;
 DROP TABLE IF EXISTS stores;
 DROP TABLE IF EXISTS users;
@@ -49,11 +41,11 @@ CREATE TABLE ratings (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insert default admin user
--- Password: Admin@123 (hashed with bcryptjs)
+-- Password: Admin@123
 INSERT INTO users (name, email, password, address, role) VALUES 
 ('System Administrator', 'admin@admin.com', '$2a$10$NSNnFZ7jogOEgdb0n3GdTeAY0tGIseyJnwdcuWvEEYQoWiRGq/AFW', '123 Admin Street', 'admin');
 
--- Insert sample stores for testing (optional)
+-- Insert sample stores for testing
 INSERT INTO stores (name, email, address) VALUES 
 ('Pizza Palace Downtown Branch', 'contact@pizzapalace.com', '123 Main Street, Downtown City'),
 ('Tech Gadgets Electronics Store', 'info@techgadgets.com', '456 Technology Avenue, Tech District'),
