@@ -31,13 +31,17 @@ git clone https://github.com/Mayur1028/StoreRatingApplication.git
 
 ### Frontend
 
+```bash
 cd frontend
 npm install
+```
 
 ### Backend
 
+```bash
 cd backend
 npm install
+```
 
 ## 3. Setup MySQL Database:
 
@@ -49,7 +53,10 @@ Start Apache and MySQL from XAMPP control panel.
 Open phpMyAdmin at http://localhost/phpmyadmin
 
 Create a new database named:
+
+```bash
 reviewapp
+```
 
 Import the SQL schema file:
 
@@ -57,6 +64,7 @@ In phpMyAdmin → Select the reviewapp database → Click “Import” tab → C
 
 ## 4. Configure Environment Variables If Needed:
 
+```bash
 Create a .env file in the backend folder:
 PORT=5000
 DB_HOST=localhost
@@ -64,13 +72,18 @@ DB_USER=your_mysql_username
 DB_PASSWORD=your_mysql_password
 DB_NAME=reviewapp
 JWT_SECRET=your_jwt_secret
+```
 
 ## 5. Run the App:
 
 ### Backend
 
+```bash
 npm run dev
+```
 
 ### Frontend
 
+```bash
 npm start
+```
