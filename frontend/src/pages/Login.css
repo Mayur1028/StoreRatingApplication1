@@ -137,19 +137,6 @@
   color: #9ca3af;
 }
 
-/* Error message */
-.error-message {
-  color: #dc3545;
-  font-size: 14px;
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  background-color: #fdf2f2;
-  border: 1px solid #fecaca;
-  border-radius: 6px;
-  text-align: center;
-  font-weight: 500;
-}
-
 /* Submit button */
 .submit-button {
   width: 100%;
@@ -165,6 +152,11 @@
   color: white;
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
   transform: translateY(0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  text-align: center;
 }
 
 .submit-button:hover:not(:disabled) {
@@ -179,21 +171,24 @@
   opacity: 0.7;
 }
 
-/* Loading spinner */
+/* Loading spinner and content */
 .loading-content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: auto;
 }
 
 .loading-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 @keyframes spin {
@@ -203,6 +198,16 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.loading-text {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Register link section */
@@ -269,6 +274,15 @@
   .form-label {
     font-size: clamp(12px, 3vw, 14px);
   }
+
+  .loading-content {
+    gap: 8px;
+  }
+
+  .loading-spinner {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -313,11 +327,6 @@
     margin-bottom: 6px;
   }
 
-  .error-message {
-    font-size: 13px;
-    padding: 10px 14px;
-  }
-
   .register-text {
     font-size: 14px;
   }
@@ -329,6 +338,10 @@
   .loading-spinner {
     width: 14px;
     height: 14px;
+  }
+
+  .loading-text {
+    font-size: 14px;
   }
 }
 
@@ -365,11 +378,25 @@
     padding: 12px 20px;
     font-size: 15px;
     font-weight: 600;
+    min-height: 48px;
   }
 
   .register-section {
     padding: 15px 0 0 0;
     margin-bottom: 20px;
+  }
+
+  .loading-content {
+    gap: 6px;
+  }
+
+  .loading-spinner {
+    width: 14px;
+    height: 14px;
+  }
+
+  .loading-text {
+    font-size: 14px;
   }
 }
 

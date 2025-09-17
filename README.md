@@ -92,3 +92,39 @@ npm run dev
 ```bash
 npm start
 ```
+
+## ✅ Pre-Registered Users (For Testing)
+
+### Admin
+
+Email: admin@admin.com
+
+Password: Admin@123
+
+### Store Owner
+
+Email: ranchor@gmail.com
+
+Password: #Ranchor@123
+
+### Normal User
+
+Email: mayur@gmail.com
+
+Password: #Mayur@123
+
+## ⚠️ Important Note
+
+In this application, a Store Owner cannot register themselves.
+
+The challenge specification only mentions that Normal Users can register via the registration page.
+
+There is no mention of Store Owners being able to self-register.
+
+👉 Therefore, to follow the specification and keep the system secure:
+
+An extra field role was added in the Admin → Add User functionality.
+
+This allows the Admin to manually create a user with the role store_owner.
+
+✅ This ensures that only the Admin can register Store Owners in the system.

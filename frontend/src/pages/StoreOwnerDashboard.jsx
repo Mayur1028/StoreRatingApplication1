@@ -11,6 +11,7 @@ const StoreOwnerDashboard = () => {
     ratingUsers: [],
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [sortOrder, setSortOrder] = useState("DESC"); // Default to newest first
 
@@ -20,12 +21,43 @@ const StoreOwnerDashboard = () => {
   // Load dashboard data
   const loadDashboard = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await apiService.storeOwner.getDashboard();
-      setDashboardData(response.data);
+
+      // Check if the response indicates no store assigned
+      if (!response.data || !response.data.store) {
+        setDashboardData({
+          store: null,
+          averageRating: 0,
+          ratingUsers: [],
+        });
+      } else {
+        setDashboardData(response.data);
+      }
     } catch (error) {
       console.error("Error loading dashboard:", error);
-      alert("Error loading store dashboard");
+
+      // Handle different types of errors
+      if (error.response?.status === 404) {
+        // No store found - this is expected for unassigned store owners
+        setDashboardData({
+          store: null,
+          averageRating: 0,
+          ratingUsers: [],
+        });
+      } else if (error.response?.status === 403) {
+        // Access denied
+        setError("Access denied. Please contact the administrator.");
+      } else if (error.response?.status >= 500) {
+        // Server error
+        setError("Server error. Please try again later or contact support.");
+      } else {
+        // Other network or unexpected errors
+        setError(
+          "Unable to load dashboard. Please check your connection and try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -41,12 +73,14 @@ const StoreOwnerDashboard = () => {
     navigate("/login");
   };
 
-  // Sort rating users
-  const sortedRatingUsers = [...dashboardData.ratingUsers].sort((a, b) => {
-    const dateA = new Date(a.created_at);
-    const dateB = new Date(b.created_at);
-    return sortOrder === "ASC" ? dateA - dateB : dateB - dateA;
-  });
+  // Sort rating users - add safety check
+  const sortedRatingUsers = dashboardData.ratingUsers
+    ? [...dashboardData.ratingUsers].sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        return sortOrder === "ASC" ? dateA - dateB : dateB - dateA;
+      })
+    : [];
 
   // Format date for display
   const formatDate = (dateString) => {
@@ -59,6 +93,7 @@ const StoreOwnerDashboard = () => {
     });
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className="store-dashboard-page loading">
@@ -67,6 +102,41 @@ const StoreOwnerDashboard = () => {
     );
   }
 
+  // Error state
+  if (error) {
+    return (
+      <div className="store-dashboard-page error">
+        {/* Header */}
+        <div className="store-header">
+          <div className="store-header-left">
+            <div className="store-logo">S</div>
+            <div className="store-header-content">
+              <h1 className="store-title">Store Owner Dashboard</h1>
+              <p className="store-subtitle">
+                Manage your store and monitor customer feedback
+              </p>
+            </div>
+          </div>
+          <div className="store-header-actions">
+            <span className="welcome-badge">Welcome, {currentUser?.name}</span>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
+
+        <div className="error-content">
+          <div className="error-icon">⚠️</div>
+          <p className="error-message">{error}</p>
+          <button className="retry-btn" onClick={loadDashboard}>
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // No store assigned state
   if (!dashboardData.store) {
     return (
       <div className="store-dashboard-page no-store">
@@ -90,14 +160,21 @@ const StoreOwnerDashboard = () => {
         </div>
 
         <div className="no-store-content">
+          <div className="no-store-icon">🏪</div>
+          <h3 className="no-store-title">No Store Assigned</h3>
           <p className="no-store-message">
-            No store found for your account. Please contact the administrator.
+            No store has been assigned to your account yet. Please contact the
+            administrator to have a store assigned to you.
           </p>
+          <button className="retry-btn" onClick={loadDashboard}>
+            Refresh
+          </button>
         </div>
       </div>
     );
   }
 
+  // Main dashboard content
   return (
     <div className="store-dashboard-page">
       {/* Header */}
@@ -156,7 +233,7 @@ const StoreOwnerDashboard = () => {
           <div className="stat-card-content">
             <div className="stat-card-text">
               <div className="stat-number">
-                {dashboardData.ratingUsers.length}
+                {dashboardData.ratingUsers?.length || 0}
               </div>
               <div className="stat-label">Total Reviews</div>
             </div>
@@ -175,8 +252,8 @@ const StoreOwnerDashboard = () => {
             </div>
             <p className="rating-text">
               {dashboardData.averageRating}/5 based on{" "}
-              {dashboardData.ratingUsers.length} review
-              {dashboardData.ratingUsers.length !== 1 ? "s" : ""}
+              {dashboardData.ratingUsers?.length || 0} review
+              {(dashboardData.ratingUsers?.length || 0) !== 1 ? "s" : ""}
             </p>
           </div>
         ) : (
@@ -189,7 +266,7 @@ const StoreOwnerDashboard = () => {
         <div className="reviews-header">
           <div className="reviews-controls">
             <h3 className="reviews-title">Customer Reviews</h3>
-            {dashboardData.ratingUsers.length > 0 && (
+            {sortedRatingUsers.length > 0 && (
               <div className="sort-controls">
                 <label className="sort-label">Sort by date:</label>
                 <select
@@ -205,7 +282,7 @@ const StoreOwnerDashboard = () => {
           </div>
         </div>
 
-        {dashboardData.ratingUsers.length === 0 ? (
+        {sortedRatingUsers.length === 0 ? (
           <div className="empty-reviews">
             <div className="empty-reviews-icon">📝</div>
             <p className="empty-reviews-text">
@@ -251,10 +328,10 @@ const StoreOwnerDashboard = () => {
       </div>
 
       {/* Rating Distribution */}
-      {dashboardData.ratingUsers.length > 0 && (
+      {sortedRatingUsers.length > 0 && (
         <div className="rating-distribution">
           <h3 className="distribution-title">Rating Distribution</h3>
-          <RatingDistribution ratings={dashboardData.ratingUsers} />
+          <RatingDistribution ratings={sortedRatingUsers} />
         </div>
       )}
 
@@ -269,11 +346,21 @@ const StoreOwnerDashboard = () => {
 // Rating Distribution Component
 const RatingDistribution = ({ ratings }) => {
   const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-  ratings.forEach((rating) => {
-    distribution[rating.rating]++;
-  });
 
-  const totalRatings = ratings.length;
+  // Add safety check for ratings array
+  if (ratings && Array.isArray(ratings)) {
+    ratings.forEach((rating) => {
+      if (
+        rating &&
+        rating.rating &&
+        distribution.hasOwnProperty(rating.rating)
+      ) {
+        distribution[rating.rating]++;
+      }
+    });
+  }
+
+  const totalRatings = ratings?.length || 0;
 
   return (
     <div className="distribution-list">

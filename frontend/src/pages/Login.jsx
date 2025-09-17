@@ -8,7 +8,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -18,14 +17,16 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError(""); // Clear error when user types
   };
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prevent multiple submissions
+    if (loading) return;
+
     setLoading(true);
-    setError("");
 
     try {
       const response = await authService.login(formData);
@@ -46,7 +47,30 @@ const Login = () => {
           navigate("/dashboard");
       }
     } catch (error) {
-      setError(error.response?.data?.error || "Login failed");
+      console.log("Login error:", error);
+
+      let errorMessage = "Login failed. Please try again.";
+
+      // Handle different error scenarios
+      if (error.response) {
+        // Server responded with error status
+        if (error.response.status === 401) {
+          errorMessage =
+            "Invalid email or password. Please check your credentials.";
+        } else if (error.response.status === 404) {
+          errorMessage = "Account not found. Please check your email address.";
+        } else if (error.response.data?.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error.request) {
+        // Network error
+        errorMessage = "Network error. Please check your internet connection.";
+      }
+
+      // Show browser alert instead of inline error message
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -59,12 +83,8 @@ const Login = () => {
         <div className="login-content">
           {/* Header Section */}
           <div className="login-header">
-            <div className="login-logo">
-              S
-            </div>
-            <h2 className="login-title">
-              Store Rating System
-            </h2>
+            <div className="login-logo">S</div>
+            <h2 className="login-title">Store Rating System</h2>
             <p className="login-subtitle">
               Welcome back! Please sign in to your account
             </p>
@@ -108,22 +128,12 @@ const Login = () => {
               </div>
             </div>
 
-            {error && (
-              <div className="error-message">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="submit-button"
-            >
+            <button type="submit" disabled={loading} className="submit-button">
               {loading ? (
-                <span className="loading-content">
-                  <span className="loading-spinner" />
-                  Signing In...
-                </span>
+                <div className="loading-content">
+                  <div className="loading-spinner" />
+                  <span className="loading-text">Signing In...</span>
+                </div>
               ) : (
                 "SIGN IN"
               )}

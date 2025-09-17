@@ -181,6 +181,7 @@
 
 .filter-select {
   cursor: pointer;
+  color: #374151;
 }
 
 .clear-filters-btn {

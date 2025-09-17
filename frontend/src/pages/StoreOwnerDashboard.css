@@ -20,7 +20,8 @@
   padding: 0;
 }
 
-.store-dashboard-page.no-store {
+.store-dashboard-page.no-store,
+.store-dashboard-page.error {
   min-height: 100vh;
   overflow-x: auto;
 }
@@ -112,6 +113,11 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-btn:hover {
+  background-color: #5a6268;
 }
 
 .logout-btn {
@@ -124,21 +130,100 @@
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
 }
 
 /* Error state */
+.error-content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 40px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.error-icon {
+  font-size: clamp(48px, 10vw, 64px);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: clamp(16px, 3vw, 18px);
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+}
+
+/* No store state */
 .no-store-content {
   background-color: white;
   border-radius: 12px;
   padding: 40px 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.no-store-icon {
+  font-size: clamp(48px, 10vw, 64px);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.no-store-title {
+  margin: 0 0 15px 0;
+  font-size: clamp(20px, 4vw, 24px);
+  font-weight: 600;
+  color: #2c3e50;
 }
 
 .no-store-message {
-  color: #dc3545;
-  font-size: 18px;
-  margin: 0;
+  color: #6c757d;
+  font-size: clamp(14px, 3vw, 16px);
+  margin: 0 0 30px 0;
+  line-height: 1.5;
+}
+
+/* Retry button */
+.retry-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: clamp(14px, 3vw, 16px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.retry-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.retry-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+}
+
+.retry-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }
 
 /* Stats cards */
@@ -530,6 +615,7 @@
   font-weight: 500;
   cursor: pointer;
   min-width: 80px;
+  transition: all 0.3s ease;
 }
 
 .modal-btn.cancel {
@@ -538,10 +624,19 @@
   color: #6c757d;
 }
 
+.modal-btn.cancel:hover {
+  background-color: #f8f9fa;
+  border-color: #6c757d;
+}
+
 .modal-btn.submit {
   border: none;
   background-color: #dc3545;
   color: white;
+}
+
+.modal-btn.submit:hover:not(:disabled) {
+  background-color: #c82333;
 }
 
 .modal-btn.submit:disabled {
@@ -579,6 +674,11 @@
   .reviews-section,
   .rating-distribution {
     padding: 18px;
+  }
+
+  .error-content,
+  .no-store-content {
+    padding: 35px 18px;
   }
 }
 
@@ -620,6 +720,11 @@
     padding: 16px;
   }
 
+  .error-content,
+  .no-store-content {
+    padding: 30px 16px;
+  }
+
   .reviews-controls {
     flex-direction: column;
     gap: 12px;
@@ -653,6 +758,11 @@
   .modal-btn {
     width: 100%;
   }
+
+  .retry-btn {
+    padding: 14px 28px;
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -675,6 +785,11 @@
   .rating-distribution {
     padding: 14px;
     margin-bottom: 15px;
+  }
+
+  .error-content,
+  .no-store-content {
+    padding: 25px 14px;
   }
 
   .review-card {
@@ -704,9 +819,20 @@
     border-radius: 8px;
   }
 
+  .error-content,
+  .no-store-content {
+    padding: 20px 12px;
+  }
+
   .modal-content {
     width: 98vw;
     padding: 12px;
+  }
+
+  .retry-btn {
+    padding: 12px 20px;
+    font-size: 15px;
+    min-width: 100px;
   }
 }
 
@@ -715,7 +841,8 @@
   .change-password-btn,
   .logout-btn,
   .sort-select,
-  .modal-btn {
+  .modal-btn,
+  .retry-btn {
     min-height: 44px;
   }
 
@@ -730,7 +857,9 @@
   .store-header,
   .rating-display,
   .reviews-section,
-  .rating-distribution {
+  .rating-distribution,
+  .error-content,
+  .no-store-content {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 }
@@ -739,7 +868,10 @@
 @media (prefers-reduced-motion: reduce) {
   .review-card,
   .modal-btn,
-  .distribution-fill {
+  .distribution-fill,
+  .retry-btn,
+  .change-password-btn,
+  .logout-btn {
     transition: none;
     animation: none;
   }

@@ -51,25 +51,29 @@ CREATE TABLE ratings (
 -- Insert default admin user
 -- Password: Admin@123 (hashed with bcryptjs)
 INSERT INTO users (name, email, password, address, role) VALUES 
-('System Administrator', 'admin@admin.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '123 Admin Street', 'admin');
+('System Administrator', 'admin@admin.com', '$2a$10$NSNnFZ7jogOEgdb0n3GdTeAY0tGIseyJnwdcuWvEEYQoWiRGq/AFW', '123 Admin Street', 'admin');
 
 -- Insert sample stores for testing (optional)
 INSERT INTO stores (name, email, address) VALUES 
 ('Pizza Palace Downtown Branch', 'contact@pizzapalace.com', '123 Main Street, Downtown City'),
 ('Tech Gadgets Electronics Store', 'info@techgadgets.com', '456 Technology Avenue, Tech District'),
-('Fresh Mart Grocery Supermarket', 'support@freshmart.com', '789 Market Road, Green Valley');
+('Fresh Mart Grocery Supermarket', 'support@freshmart.com', '789 Market Road, Green Valley'),
+('Ranchors Das Coffee Store', 'ranchor@gmail.com', 'Sewagram Road Wardha, Ward No.6');
 
 -- Insert a sample store owner user
 INSERT INTO users (name, email, password, address, role) VALUES 
-('John Store Owner Manager', 'owner@pizzapalace.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '123 Main Street, Downtown City', 'store_owner');
+('John Store Owner Manager', 'owner@pizzapalace.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '123 Main Street, Downtown City', 'store_owner'),
+('Ranjhor das sharma Junior 1', 'ranchor@gmail.com', '$2a$10$sMlrPMoC5rZ0zQTL6dPaf.cJt28zNYDyGiByxdCOEzuvI0jMn/iAq', 'Sewagram Road Wardha', 'store_owner');
 
 -- Link the store owner to Pizza Palace
 UPDATE stores SET owner_id = (SELECT id FROM users WHERE email = 'owner@pizzapalace.com') WHERE email = 'contact@pizzapalace.com';
+UPDATE stores SET owner_id = (SELECT id FROM users WHERE email = 'ranchor@gmail.com') WHERE email = 'ranchor@gmail.com';
 
 -- Insert sample normal users for testing
 INSERT INTO users (name, email, password, address, role) VALUES 
 ('Alice Johnson Customer User', 'alice@example.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '321 Residential Street, Suburb Area', 'user'),
-('Bob Smith Regular Customer', 'bob@example.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '654 Customer Lane, City Center', 'user');
+('Bob Smith Regular Customer', 'bob@example.com', '$2a$10$K8BNJrNn7pWzZnHcqD8.7.dWcvZhJiP3HiFp8n6FKtWLXmcKxPGdS', '654 Customer Lane, City Center', 'user'),
+('Mayur Rajurao Kalbande', 'mayur@gmail.com', '$2a$10$YPMpKWmm8AW9jq9WtAplg.ITV0jGpiwkB3KJBLSdDD6cmlbrjtR6K', 'Sewagram Road Wardha, Ward No.6', 'user');
 
 -- Insert sample ratings for testing
 INSERT INTO ratings (user_id, store_id, rating) VALUES 
