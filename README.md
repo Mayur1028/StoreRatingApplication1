@@ -1,12 +1,76 @@
-# React + Vite
+# Store Rating Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application built with **React (Frontend)**, **Express.js (Backend)**, and **MySQL (Database)**.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User Registration & Login (with JWT Authentication)
+- Role-Based Access Control (Admin, Store Owner, Normal User)
+- Submit and Update Store Ratings
+- Admin Dashboard to manage Users and Stores
+- Store Owner Dashboard to view ratings and users
+- Data filtering and sorting
+- Password update functionality
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Frontend: React, Axios
+- Backend: Express.js, Node.js
+- Database: MySQL (managed via phpMyAdmin)
+- Authentication: JWT
+
+## ⚡ Installation
+
+### 1. Clone the repo:
+
+```bash
+git clone https://github.com/Mayur1028/StoreRatingApplication.git
+```
+
+### 2. Install dependencies:
+
+# Frontend
+
+cd frontend
+npm install
+
+# Backend
+
+cd backend
+npm install
+
+### 3. Setup MySQL Database:
+
+Install XAMPP (includes MySQL and phpMyAdmin):
+Download from https://www.apachefriends.org/index.html
+
+Start Apache and MySQL from XAMPP control panel.
+
+Open phpMyAdmin at http://localhost/phpmyadmin
+
+Create a new database named:
+reviewapp
+
+Import the SQL schema file:
+
+In phpMyAdmin → Select the reviewapp database → Click “Import” tab → Choose the file database_import_file.sql → Click “Go” to import tables and initial schema.
+
+### 4. Configure Environment Variables If Needed:
+
+Create a .env file in the backend folder:
+PORT=5000
+DB_HOST=localhost
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=reviewapp
+JWT_SECRET=your_jwt_secret
+
+### 5. Run the App:
+
+# Backend
+
+npm run dev
+
+# Frontend
+
+npm start
