@@ -21,25 +21,25 @@ A full-stack web application built with **React (Frontend)**, **Express.js (Back
 
 ## ⚡ Installation
 
-### 1. Clone the repo:
+## 1. Clone the repo:
 
 ```bash
 git clone https://github.com/Mayur1028/StoreRatingApplication.git
 ```
 
-### 2. Install dependencies:
+## 2. Install dependencies:
 
-# Frontend
+### Frontend
 
 cd frontend
 npm install
 
-# Backend
+### Backend
 
 cd backend
 npm install
 
-### 3. Setup MySQL Database:
+## 3. Setup MySQL Database:
 
 Install XAMPP (includes MySQL and phpMyAdmin):
 Download from https://www.apachefriends.org/index.html
@@ -55,7 +55,7 @@ Import the SQL schema file:
 
 In phpMyAdmin → Select the reviewapp database → Click “Import” tab → Choose the file database_import_file.sql → Click “Go” to import tables and initial schema.
 
-### 4. Configure Environment Variables If Needed:
+## 4. Configure Environment Variables If Needed:
 
 Create a .env file in the backend folder:
 PORT=5000
@@ -65,12 +65,12 @@ DB_PASSWORD=your_mysql_password
 DB_NAME=reviewapp
 JWT_SECRET=your_jwt_secret
 
-### 5. Run the App:
+## 5. Run the App:
 
-# Backend
+### Backend
 
 npm run dev
 
-# Frontend
+### Frontend
 
 npm start
