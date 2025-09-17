@@ -33,6 +33,9 @@ git clone https://github.com/Mayur1028/StoreRatingApplication.git
 
 ```bash
 cd frontend
+```
+
+```bash
 npm install
 ```
 
@@ -40,6 +43,9 @@ npm install
 
 ```bash
 cd backend
+```
+
+```bash
 npm install
 ```
 
