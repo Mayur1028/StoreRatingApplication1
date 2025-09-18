@@ -38,7 +38,7 @@ const StoreOwnerDashboard = () => {
     } catch (error) {
       console.error("Error loading dashboard:", error);
 
-      // Handle different types of errors
+      // Handle errors
       if (error.response?.status === 404) {
         // No store found - this is expected for unassigned store owners
         setDashboardData({
@@ -47,13 +47,10 @@ const StoreOwnerDashboard = () => {
           ratingUsers: [],
         });
       } else if (error.response?.status === 403) {
-        // Access denied
         setError("Access denied. Please contact the administrator.");
       } else if (error.response?.status >= 500) {
-        // Server error
         setError("Server error. Please try again later or contact support.");
       } else {
-        // Other network or unexpected errors
         setError(
           "Unable to load dashboard. Please check your connection and try again."
         );

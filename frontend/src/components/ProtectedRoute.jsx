@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // If role is required and user doesn't have it, redirect based on user role
+  // If role is required and user doesn't have it redirect based on user role
   if (requiredRole && currentUser?.role !== requiredRole) {
     // Redirect to appropriate dashboard based on user's actual role
     switch (currentUser?.role) {

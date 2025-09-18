@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(""); // 'user' or 'store'
+  const [modalType, setModalType] = useState("");
   const [filters, setFilters] = useState({
     name: "",
     email: "",
