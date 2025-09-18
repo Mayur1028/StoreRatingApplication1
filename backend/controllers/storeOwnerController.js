@@ -1,54 +1,64 @@
-const pool = require("../config/database");
+// controllers/storeOwnerController.js
+const { User, Store, Rating } = require("../models");
 
-// Get store owner's dashboard data
 const getOwnerDashboard = async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
-    // Get the store owned by this user
-    const [stores] = await pool.query(
-      "SELECT id, name FROM stores WHERE owner_id = ?",
-      [userId]
-    );
+    const store = await Store.findOne({
+      where: { owner_id: userId },
+      include: [
+        {
+          model: Rating,
+          as: "ratings",
+          include: [
+            {
+              model: User,
+              as: "user",
+              attributes: ["id", "name", "email"],
+            },
+          ],
+        },
+      ],
+    });
 
-    if (stores.length === 0) {
-      return res.status(404).json({ error: "No store found for this owner" });
+    if (!store) {
+      return res.json({
+        store: null,
+        averageRating: 0,
+        ratingUsers: [],
+      });
     }
 
-    const storeId = stores[0].id;
-    const storeName = stores[0].name;
+    const ratings = store.ratings || [];
+    const averageRating =
+      ratings.length > 0
+        ? (
+            ratings.reduce((sum, rating) => sum + rating.rating, 0) /
+            ratings.length
+          ).toFixed(1)
+        : 0;
 
-    // Get average rating
-    const [avgRating] = await pool.query(
-      "SELECT ROUND(AVG(rating), 2) as averageRating FROM ratings WHERE store_id = ?",
-      [storeId]
-    );
-
-    // Get users who rated this store
-    const [ratingUsers] = await pool.query(
-      `
-      SELECT 
-        u.id, u.name, u.email, 
-        r.rating, r.created_at
-      FROM ratings r
-      JOIN users u ON r.user_id = u.id
-      WHERE r.store_id = ?
-      ORDER BY r.created_at DESC
-    `,
-      [storeId]
-    );
+    const ratingUsers = ratings.map((rating) => ({
+      id: rating.user.id,
+      name: rating.user.name,
+      email: rating.user.email,
+      rating: rating.rating,
+      created_at: rating.created_at,
+    }));
 
     res.json({
       store: {
-        id: storeId,
-        name: storeName,
+        id: store.id,
+        name: store.name,
+        email: store.email,
+        address: store.address,
       },
-      averageRating: avgRating[0].averageRating || 0,
-      ratingUsers: ratingUsers,
+      averageRating: parseFloat(averageRating),
+      ratingUsers,
     });
   } catch (error) {
-    console.error("Owner dashboard error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Failed to load dashboard" });
   }
 };
 

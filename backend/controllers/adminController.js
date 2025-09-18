@@ -1,26 +1,24 @@
 const bcrypt = require("bcryptjs");
-const pool = require("../config/database");
+const { User, Store, Rating, sequelize } = require('../models');
 
 // Get dashboard statistics
 const getDashboardStats = async (req, res) => {
   try {
-    // Get total users count
-    const [userCount] = await pool.query("SELECT COUNT(*) as count FROM users");
+    // Get total users count using model
+    const totalUsers = await User.count();
 
-    // Get total stores count
-    const [storeCount] = await pool.query(
-      "SELECT COUNT(*) as count FROM stores"
-    );
+    // Get total stores count using model
+    const totalStores = await Store.count();
 
-    // Get total ratings count
-    const [ratingCount] = await pool.query(
-      "SELECT COUNT(*) as count FROM ratings"
-    );
+    // Get total ratings count using model
+    const totalRatings = await Rating.count();
 
     res.json({
-      totalUsers: userCount[0].count,
-      totalStores: storeCount[0].count,
-      totalRatings: ratingCount[0].count,
+      stats: {
+        totalUsers,
+        totalStores,
+        totalRatings,
+      }
     });
   } catch (error) {
     console.error("Dashboard stats error:", error);
@@ -63,29 +61,33 @@ const addUser = async (req, res) => {
       });
     }
 
-    // Check if user already exists
-    const [existingUser] = await pool.query(
-      "SELECT id FROM users WHERE email = ?",
-      [email]
-    );
-    if (existingUser.length > 0) {
+    // Check if user already exists using model
+    const existingUser = await User.findOne({ 
+      where: { email },
+      attributes: ['id']
+    });
+
+    if (existingUser) {
       return res
         .status(400)
         .json({ error: "User already exists with this email" });
     }
 
-    // Hash password
+    // Hash password manually (since we want same logic as original)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user
-    const [result] = await pool.query(
-      "INSERT INTO users (name, email, password, address, role) VALUES (?, ?, ?, ?, ?)",
-      [name, email, hashedPassword, address, role]
-    );
+    // Create new user using model
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword, // Use pre-hashed password to avoid double hashing
+      address,
+      role
+    });
 
     res.status(201).json({
       message: "User added successfully",
-      userId: result.insertId,
+      userId: user.id,
     });
   } catch (error) {
     console.error("Add user error:", error);
@@ -110,12 +112,13 @@ const addStore = async (req, res) => {
         .json({ error: "Address must be less than 400 characters" });
     }
 
-    // Check if store email already exists
-    const [existingStore] = await pool.query(
-      "SELECT id FROM stores WHERE email = ?",
-      [email]
-    );
-    if (existingStore.length > 0) {
+    // Check if store email already exists using model
+    const existingStore = await Store.findOne({
+      where: { email },
+      attributes: ['id']
+    });
+
+    if (existingStore) {
       return res
         .status(400)
         .json({ error: "Store already exists with this email" });
@@ -125,33 +128,34 @@ const addStore = async (req, res) => {
 
     // If owner email provided, find the owner and update their role
     if (ownerEmail) {
-      const [users] = await pool.query("SELECT id FROM users WHERE email = ?", [
-        ownerEmail,
-      ]);
-      if (users.length === 0) {
+      const user = await User.findOne({
+        where: { email: ownerEmail },
+        attributes: ['id']
+      });
+
+      if (!user) {
         return res
           .status(400)
           .json({ error: "Owner with this email not found" });
       }
 
-      ownerId = users[0].id;
+      ownerId = user.id;
 
-      // Update user role to store_owner
-      await pool.query("UPDATE users SET role = ? WHERE id = ?", [
-        "store_owner",
-        ownerId,
-      ]);
+      // Update user role to store_owner using model
+      await user.update({ role: "store_owner" });
     }
 
-    // Insert new store
-    const [result] = await pool.query(
-      "INSERT INTO stores (name, email, address, owner_id) VALUES (?, ?, ?, ?)",
-      [name, email, address, ownerId]
-    );
+    // Create new store using model
+    const store = await Store.create({
+      name,
+      email,
+      address,
+      owner_id: ownerId
+    });
 
     res.status(201).json({
       message: "Store added successfully",
-      storeId: result.insertId,
+      storeId: store.id,
     });
   } catch (error) {
     console.error("Add store error:", error);
@@ -203,8 +207,13 @@ const getUsers = async (req, res) => {
       query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
     }
 
-    const [users] = await pool.query(query, params);
-    res.json(users);
+    // Use raw query for complex filtering but through sequelize
+    const users = await sequelize.query(query, {
+      replacements: params,
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    res.json({ users });
   } catch (error) {
     console.error("Get users error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -259,8 +268,13 @@ const getStores = async (req, res) => {
       query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
     }
 
-    const [stores] = await pool.query(query, params);
-    res.json(stores);
+    // Use raw query for complex filtering but through sequelize
+    const stores = await sequelize.query(query, {
+      replacements: params,
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    res.json({ stores });
   } catch (error) {
     console.error("Get stores error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -292,7 +306,11 @@ const getUserDetails = async (req, res) => {
       WHERE u.id = ?
     `;
 
-    const [users] = await pool.query(query, [id]);
+    // Use raw query for complex logic but through sequelize
+    const users = await sequelize.query(query, {
+      replacements: [id],
+      type: sequelize.QueryTypes.SELECT
+    });
 
     if (users.length === 0) {
       return res.status(404).json({ error: "User not found" });

@@ -1,24 +1,30 @@
+// middleware/auth.js
 const jwt = require("jsonwebtoken");
+const { User } = require("../models");
 
-// Middleware that will verify my JWT token
-const authenticateToken = (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ error: "Access token required" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: "Invalid or expired token" });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.userId);
+
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
     }
-    req.user = user; 
+
+    req.user = user;
     next();
-  });
+  } catch (error) {
+    return res.status(403).json({ error: "Invalid or expired token" });
+  }
 };
 
-// Middleware that will check if user is admin
 const requireAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ error: "Admin access required" });
@@ -26,7 +32,6 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-// Middleware that will check if user is store owner
 const requireStoreOwner = (req, res, next) => {
   if (req.user.role !== "store_owner") {
     return res.status(403).json({ error: "Store owner access required" });

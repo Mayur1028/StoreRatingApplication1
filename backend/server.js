@@ -1,6 +1,10 @@
+// server.js
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+
+// Import database and models
+const { syncDatabase } = require("./models");
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
@@ -33,6 +37,15 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await syncDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+  }
+};
+
+startServer();

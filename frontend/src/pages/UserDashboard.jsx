@@ -25,7 +25,7 @@ const UserDashboard = () => {
     setLoading(true);
     try {
       const response = await apiService.stores.getStores(filters);
-      setStores(response.data);
+      setStores(response.data.stores);
     } catch (error) {
       console.error("Error loading stores:", error);
       alert("Error loading stores");

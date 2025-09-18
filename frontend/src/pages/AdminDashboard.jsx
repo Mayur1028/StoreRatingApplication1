@@ -32,7 +32,7 @@ const AdminDashboard = () => {
   const loadStats = async () => {
     try {
       const response = await apiService.admin.getDashboardStats();
-      setStats(response.data);
+      setStats(response.data.stats);
     } catch (error) {
       console.error("Error loading stats:", error);
     }
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await apiService.admin.getUsers(filters);
-      setUsers(response.data);
+      setUsers(response.data.users);
     } catch (error) {
       console.error("Error loading users:", error);
     } finally {
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const response = await apiService.admin.getStores(filters);
-      setStores(response.data);
+      setStores(response.data.stores);
     } catch (error) {
       console.error("Error loading stores:", error);
     } finally {

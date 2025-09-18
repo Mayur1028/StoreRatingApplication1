@@ -1,10 +1,11 @@
-const pool = require("../config/database");
+// controllers/storeController.js
+const { User, Store, Rating, sequelize } = require("../models");
 
 // Get all stores for normal users with their ratings
 const getStoresForUser = async (req, res) => {
   try {
     const { name, address, sortBy = "name", sortOrder = "ASC" } = req.query;
-    const userId = req.user.userId;
+    const userId = req.user.id; // Changed from req.user.userId to match our auth middleware
 
     let query = `
       SELECT 
@@ -41,8 +42,13 @@ const getStoresForUser = async (req, res) => {
       query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
     }
 
-    const [stores] = await pool.query(query, params);
-    res.json(stores);
+    const stores = await sequelize.query(query, {
+      replacements: params,
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    // Return in the format your frontend expects
+    res.json({ stores: stores });
   } catch (error) {
     console.error("Get stores error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -53,7 +59,7 @@ const getStoresForUser = async (req, res) => {
 const submitRating = async (req, res) => {
   try {
     const { storeId, rating } = req.body;
-    const userId = req.user.userId;
+    const userId = req.user.id; // Changed from req.user.userId to match our auth middleware
 
     // Validate rating
     if (!rating || rating < 1 || rating > 5) {
@@ -61,32 +67,30 @@ const submitRating = async (req, res) => {
     }
 
     // Check if store exists
-    const [stores] = await pool.query("SELECT id FROM stores WHERE id = ?", [
-      storeId,
-    ]);
-    if (stores.length === 0) {
+    const store = await Store.findByPk(storeId);
+    if (!store) {
       return res.status(404).json({ error: "Store not found" });
     }
 
     // Check if user already rated this store
-    const [existingRating] = await pool.query(
-      "SELECT id FROM ratings WHERE user_id = ? AND store_id = ?",
-      [userId, storeId]
-    );
+    const existingRating = await Rating.findOne({
+      where: {
+        user_id: userId,
+        store_id: storeId,
+      },
+    });
 
-    if (existingRating.length > 0) {
+    if (existingRating) {
       // Update existing rating
-      await pool.query(
-        "UPDATE ratings SET rating = ? WHERE user_id = ? AND store_id = ?",
-        [rating, userId, storeId]
-      );
+      await existingRating.update({ rating: rating });
       res.json({ message: "Rating updated successfully" });
     } else {
       // Insert new rating
-      await pool.query(
-        "INSERT INTO ratings (user_id, store_id, rating) VALUES (?, ?, ?)",
-        [userId, storeId, rating]
-      );
+      await Rating.create({
+        user_id: userId,
+        store_id: storeId,
+        rating: rating,
+      });
       res.json({ message: "Rating submitted successfully" });
     }
   } catch (error) {
@@ -99,4 +103,3 @@ module.exports = {
   getStoresForUser,
   submitRating,
 };
-
