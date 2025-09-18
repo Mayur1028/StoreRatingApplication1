@@ -49,7 +49,29 @@ cd backend
 npm install
 ```
 
-## 3. Configure Environment Variables If Needed:
+## 3. 🛠 Database Setup
+
+This project uses Sequelize for database management, so you do not need XAMPP or phpMyAdmin unless you prefer to use them.
+
+###Requirements
+
+Install MySQL Server (standalone version) on your system.
+
+[MySQL Community Server Download](https://dev.mysql.com/downloads/mysql/)
+
+Configure .env file with your MySQL credentials:
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=reviewapp
+
+🔹 Make sure to replace your_mysql_username and your_mysql_password with your MySQL user credentials.
+
+Optional: You can still use XAMPP if you prefer, just make sure the credentials match your .env file.
+
+## 4. Configure Environment Variables If Needed:
 
 ```bash
 DB_HOST=localhost
@@ -60,7 +82,7 @@ JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFt
 PORT=5000
 ```
 
-## 4. Run the App:
+## 5. Run the App:
 
 ### Backend
 
