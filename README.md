@@ -108,4 +108,5 @@ An extra field role was added in the Admin → Add User functionality.
 
 This allows the Admin to manually create a user with the role store_owner.
 
-✅ This ensures that only the Admin can register Store Owners in the system.
+✅ Additionally, when the Admin assigns a store to a Normal User, that user’s role is automatically updated to store_owner.
+This ensures proper role management in the system.
