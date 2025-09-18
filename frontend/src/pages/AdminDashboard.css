@@ -417,6 +417,7 @@
 .table-row {
   border-bottom: 1px solid #f1f5f9;
   transition: all 0.2s ease;
+  vertical-align: top;
 }
 
 .table-row:hover {
@@ -425,6 +426,9 @@
 
 .table-cell {
   padding: 15px;
+  vertical-align: middle; /* Centers content vertically in each cell */
+  word-wrap: break-word; /* Allows long addresses to wrap */
+  max-width: 250px; /* Limits address column width */
 }
 
 .table-cell.name {
@@ -435,6 +439,30 @@
   color: #64748b;
 }
 
+.table-cell.address {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+* Show full address on hover */ .table-cell.address:hover {
+  white-space: normal;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+/* Ensure role badge stays properly aligned */
+.table-cell:last-child {
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
 /* Role badge */
 .role-badge {
   padding: 6px 12px;
@@ -442,6 +470,7 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
+  display: inline-block; /* Prevents badge from wrapping */
 }
 
 .role-badge.admin {

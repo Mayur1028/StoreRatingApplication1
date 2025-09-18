@@ -356,7 +356,7 @@ const AdminDashboard = () => {
                         <tr key={user.id} className="table-row">
                           <td className="table-cell name">{user.name}</td>
                           <td className="table-cell secondary">{user.email}</td>
-                          <td className="table-cell secondary">
+                          <td className="table-cell secondary address">
                             {user.address}
                           </td>
                           <td className="table-cell">
@@ -495,7 +495,7 @@ const AdminDashboard = () => {
                           <td className="table-cell secondary">
                             {store.email}
                           </td>
-                          <td className="table-cell secondary">
+                          <td className="table-cell secondary address">
                             {store.address}
                           </td>
                           <td className="table-cell">
