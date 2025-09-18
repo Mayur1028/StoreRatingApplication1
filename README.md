@@ -53,7 +53,7 @@ npm install
 
 This project uses Sequelize for database management, so you do not need XAMPP or phpMyAdmin unless you prefer to use them.
 
-###Requirements
+### Requirements
 
 Install MySQL Server (standalone version) on your system.
 
