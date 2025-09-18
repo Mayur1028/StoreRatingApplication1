@@ -41,7 +41,7 @@ const createDefaultData = async () => {
       const storeOwner2 = await User.create({
         name: "Raju Kalbande Junior 2",
         email: "raju12@gmail.com",
-        password: "Mayur@123", // As you requested
+        password: "Mayur@123",
         address:
           "2nd Floor, Koti Market, Abids Road, Hyderabad, Telangana – 500001",
         role: "store_owner",
@@ -50,7 +50,7 @@ const createDefaultData = async () => {
       const storeOwner3 = await User.create({
         name: "Raju Kalbande Junior 3",
         email: "raju123@gmail.com",
-        password: "Owner@123", // default since not specified
+        password: "Owner@123",
         address:
           "45/12, Gandhi Bazaar Main Road, Basavanagudi, Bengaluru, Karnataka – 560004",
         role: "store_owner",
@@ -68,7 +68,7 @@ const createDefaultData = async () => {
       const user2 = await User.create({
         name: "Mayur Kalbande Junior 2",
         email: "mayur12@gmail.com",
-        password: "User@123", // default
+        password: "User@123",
         address: "Sector 15, Noida, Uttar Pradesh",
         role: "user",
       });
@@ -76,7 +76,7 @@ const createDefaultData = async () => {
       const user3 = await User.create({
         name: "Mayur Kalbande Junior 3",
         email: "mayur123@gmail.com",
-        password: "User@123", // default
+        password: "User@123",
         address: "MG Road, Indore, Madhya Pradesh",
         role: "user",
       });

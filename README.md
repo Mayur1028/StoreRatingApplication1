@@ -16,7 +16,7 @@ A full-stack web application built with **React (Frontend)**, **Express.js (Back
 
 - Frontend: React, Axios
 - Backend: Express.js, Node.js
-- Database: MySQL (managed via phpMyAdmin)
+- Database: MySQL
 - Authentication: JWT
 
 ## ⚡ Installation
@@ -24,7 +24,7 @@ A full-stack web application built with **React (Frontend)**, **Express.js (Back
 ## 1. Clone the repo:
 
 ```bash
-git clone https://github.com/Mayur1028/StoreRatingApplication.git
+git clone https://github.com/Mayur1028/StoreRatingApplication1.git
 ```
 
 ## 2. Install dependencies:
@@ -49,37 +49,18 @@ cd backend
 npm install
 ```
 
-## 3. Setup MySQL Database:
-
-Install XAMPP (includes MySQL and phpMyAdmin):
-Download from https://www.apachefriends.org/index.html
-
-Start Apache and MySQL from XAMPP control panel.
-
-Open phpMyAdmin at http://localhost/phpmyadmin
-
-Create a new database named:
+## 3. Configure Environment Variables If Needed:
 
 ```bash
-reviewapp
-```
-
-Import the SQL schema file:
-
-In phpMyAdmin → Select the reviewapp database → Click “Import” tab → Choose the file database_import_file.sql → Click “Go” to import tables and initial schema.
-
-## 4. Configure Environment Variables If Needed:
-
-```bash
-PORT=5000
 DB_HOST=localhost
-DB_USER=your_mysql_username
-DB_PASSWORD=your_mysql_password
+DB_USER=root
+DB_PASSWORD=
 DB_NAME=reviewapp
 JWT_SECRET=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+PORT=5000
 ```
 
-## 5. Run the App:
+## 4. Run the App:
 
 ### Backend
 
@@ -90,7 +71,7 @@ npm run dev
 ### Frontend
 
 ```bash
-npm start
+npm run dev
 ```
 
 ## ✅ Pre-Registered Users (For Testing)
@@ -103,15 +84,15 @@ Password: Admin@123
 
 ### Store Owner
 
-Email: ranchor@gmail.com
+Email: raju12@gmail.com
 
-Password: #Ranchor@123
+Password: Mayur@123
 
 ### Normal User
 
 Email: mayur@gmail.com
 
-Password: #Mayur@123
+Password: Mayur@123
 
 ## ⚠️ Important Note
 
