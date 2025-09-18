@@ -1,11 +1,10 @@
-// controllers/storeController.js
 const { User, Store, Rating, sequelize } = require("../models");
 
-// Get all stores for normal users with their ratings
+// Getting all stores for normal users with their ratings
 const getStoresForUser = async (req, res) => {
   try {
     const { name, address, sortBy = "name", sortOrder = "ASC" } = req.query;
-    const userId = req.user.id; // Changed from req.user.userId to match our auth middleware
+    const userId = req.user.id;
 
     let query = `
       SELECT 
@@ -31,7 +30,7 @@ const getStoresForUser = async (req, res) => {
 
     query += " GROUP BY s.id, s.name, s.address, ur.rating";
 
-    // Add sorting
+    // Sorting
     const validSortFields = ["name", "address", "overallRating"];
     const validSortOrders = ["ASC", "DESC"];
 
@@ -47,7 +46,6 @@ const getStoresForUser = async (req, res) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    // Return in the format your frontend expects
     res.json({ stores: stores });
   } catch (error) {
     console.error("Get stores error:", error);
@@ -59,20 +57,20 @@ const getStoresForUser = async (req, res) => {
 const submitRating = async (req, res) => {
   try {
     const { storeId, rating } = req.body;
-    const userId = req.user.id; // Changed from req.user.userId to match our auth middleware
+    const userId = req.user.id;
 
-    // Validate rating
+    // Validating rating
     if (!rating || rating < 1 || rating > 5) {
       return res.status(400).json({ error: "Rating must be between 1 and 5" });
     }
 
-    // Check if store exists
+    // Checking if store exists
     const store = await Store.findByPk(storeId);
     if (!store) {
       return res.status(404).json({ error: "Store not found" });
     }
 
-    // Check if user already rated this store
+    // Checking if user already rated this store
     const existingRating = await Rating.findOne({
       where: {
         user_id: userId,
@@ -81,11 +79,11 @@ const submitRating = async (req, res) => {
     });
 
     if (existingRating) {
-      // Update existing rating
+      // Updating existing rating
       await existingRating.update({ rating: rating });
       res.json({ message: "Rating updated successfully" });
     } else {
-      // Insert new rating
+      // Inserting new rating
       await Rating.create({
         user_id: userId,
         store_id: storeId,

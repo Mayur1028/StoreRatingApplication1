@@ -1,10 +1,9 @@
-// models/index.js
 const { sequelize, createDatabaseIfNotExists } = require("../config/database");
 const User = require("./User");
 const Store = require("./Store");
 const Rating = require("./Rating");
 
-// Define associations
+// Define relationships
 User.hasOne(Store, { foreignKey: "owner_id", as: "ownedStore" });
 Store.belongsTo(User, { foreignKey: "owner_id", as: "owner" });
 
@@ -28,7 +27,7 @@ const createDefaultData = async () => {
         role: "admin",
       });
 
-      // === Store Owners ===
+      // Store Owners
       const storeOwner1 = await User.create({
         name: "Raju Kalbande Junior 1",
         email: "raju@gmail.com",
@@ -56,7 +55,7 @@ const createDefaultData = async () => {
         role: "store_owner",
       });
 
-      // === Regular Users ===
+      // Regular Users
       const user1 = await User.create({
         name: "Mayur Kalbande Junior 1",
         email: "mayur@gmail.com",
@@ -81,7 +80,7 @@ const createDefaultData = async () => {
         role: "user",
       });
 
-      // === Stores ===
+      // Stores
       const store1 = await Store.create({
         name: "Sagar Ratna Family Dhaba",
         email: "contact@sagarratna.com",
@@ -106,7 +105,7 @@ const createDefaultData = async () => {
         owner_id: storeOwner3.id,
       });
 
-      // === Ratings (Sample) ===
+      // Ratings (Sample)
       await Rating.create({
         user_id: user1.id,
         store_id: store1.id,

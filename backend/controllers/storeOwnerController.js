@@ -1,4 +1,3 @@
-// controllers/storeOwnerController.js
 const { User, Store, Rating } = require("../models");
 
 const getOwnerDashboard = async (req, res) => {

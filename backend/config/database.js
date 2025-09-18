@@ -1,4 +1,3 @@
-// config/database.js
 const { Sequelize } = require("sequelize");
 const mysql = require("mysql2/promise");
 require("dotenv").config();
@@ -6,14 +5,13 @@ require("dotenv").config();
 // Function to create database if it doesn't exist
 const createDatabaseIfNotExists = async () => {
   try {
-    // Connect to MySQL without specifying database
     const connection = await mysql.createConnection({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD || "",
     });
 
-    // Create database if it doesn't exist
+    // Creating database if it doesn't exist
     await connection.execute(
       `CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\``
     );

@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { User, Store, Rating, sequelize } = require('../models');
+const { User, Store, Rating, sequelize } = require("../models");
 
 // Get dashboard statistics
 const getDashboardStats = async (req, res) => {
@@ -18,7 +18,7 @@ const getDashboardStats = async (req, res) => {
         totalUsers,
         totalStores,
         totalRatings,
-      }
+      },
     });
   } catch (error) {
     console.error("Dashboard stats error:", error);
@@ -62,9 +62,9 @@ const addUser = async (req, res) => {
     }
 
     // Check if user already exists using model
-    const existingUser = await User.findOne({ 
+    const existingUser = await User.findOne({
       where: { email },
-      attributes: ['id']
+      attributes: ["id"],
     });
 
     if (existingUser) {
@@ -73,16 +73,16 @@ const addUser = async (req, res) => {
         .json({ error: "User already exists with this email" });
     }
 
-    // Hash password manually (since we want same logic as original)
+    // Hash password manually
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new user using model
     const user = await User.create({
       name,
       email,
-      password: hashedPassword, // Use pre-hashed password to avoid double hashing
+      password: hashedPassword,
       address,
-      role
+      role,
     });
 
     res.status(201).json({
@@ -115,7 +115,7 @@ const addStore = async (req, res) => {
     // Check if store email already exists using model
     const existingStore = await Store.findOne({
       where: { email },
-      attributes: ['id']
+      attributes: ["id"],
     });
 
     if (existingStore) {
@@ -126,11 +126,11 @@ const addStore = async (req, res) => {
 
     let ownerId = null;
 
-    // If owner email provided, find the owner and update their role
+    // If owner email provided find the owner and update their role
     if (ownerEmail) {
       const user = await User.findOne({
         where: { email: ownerEmail },
-        attributes: ['id']
+        attributes: ["id"],
       });
 
       if (!user) {
@@ -150,7 +150,7 @@ const addStore = async (req, res) => {
       name,
       email,
       address,
-      owner_id: ownerId
+      owner_id: ownerId,
     });
 
     res.status(201).json({
@@ -210,7 +210,7 @@ const getUsers = async (req, res) => {
     // Use raw query for complex filtering but through sequelize
     const users = await sequelize.query(query, {
       replacements: params,
-      type: sequelize.QueryTypes.SELECT
+      type: sequelize.QueryTypes.SELECT,
     });
 
     res.json({ users });
@@ -268,10 +268,10 @@ const getStores = async (req, res) => {
       query += ` ORDER BY ${sortBy} ${sortOrder.toUpperCase()}`;
     }
 
-    // Use raw query for complex filtering but through sequelize
+    // Use raw query as it cannot be done with model directly
     const stores = await sequelize.query(query, {
       replacements: params,
-      type: sequelize.QueryTypes.SELECT
+      type: sequelize.QueryTypes.SELECT,
     });
 
     res.json({ stores });
@@ -306,10 +306,10 @@ const getUserDetails = async (req, res) => {
       WHERE u.id = ?
     `;
 
-    // Use raw query for complex logic but through sequelize
+    // Use raw query as it cannot be done with model directly
     const users = await sequelize.query(query, {
       replacements: [id],
-      type: sequelize.QueryTypes.SELECT
+      type: sequelize.QueryTypes.SELECT,
     });
 
     if (users.length === 0) {
